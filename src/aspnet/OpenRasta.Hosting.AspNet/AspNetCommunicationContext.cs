@@ -12,7 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Principal;
 using System.Web;
+using OpenRasta.DI;
 using OpenRasta.Diagnostics;
+using OpenRasta.Hosting;
 using OpenRasta.Pipeline;
 using OpenRasta.Web;
 
@@ -37,9 +39,9 @@ namespace OpenRasta.Hosting.AspNet
                 if (NativeContext == null)
                     return null;
 
-                string baseUri = "{0}://{1}/".With(NativeContext.Request.Url.Scheme, NativeContext.Request.ServerVariables["HTTP_HOST"]);
+                var baseUri = DependencyManager.GetService<OpenRasta.Hosting.IApplicationBaseUriProvider>().GetBaseUri(UriKind.Absolute);
 
-                var appBaseUri = new Uri(new Uri(baseUri), new Uri(NativeContext.Request.ApplicationPath, UriKind.Relative));
+                var appBaseUri = new Uri(baseUri, new Uri(NativeContext.Request.ApplicationPath, UriKind.Relative));
                 return appBaseUri;
             }
         }
