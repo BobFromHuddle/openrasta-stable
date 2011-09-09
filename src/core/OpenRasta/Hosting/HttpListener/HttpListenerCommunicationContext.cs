@@ -28,7 +28,7 @@ namespace OpenRasta.Hosting.HttpListener
             {
                 var baseUriProvider = DependencyManager.GetService<IApplicationBaseUriProvider>();
                 
-                var appBaseUri = new Uri(baseUriProvider.GetBaseUri(UriKind.Absolute), 
+                var appBaseUri = new Uri(baseUriProvider.GetBaseUri(Request), 
                                          new Uri(_host.ApplicationVirtualPath, UriKind.Relative));
                 return appBaseUri;
             }

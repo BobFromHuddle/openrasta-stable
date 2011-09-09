@@ -39,7 +39,7 @@ namespace OpenRasta.Hosting.AspNet
                 if (NativeContext == null)
                     return null;
 
-                var baseUri = DependencyManager.GetService<OpenRasta.Hosting.IApplicationBaseUriProvider>().GetBaseUri(UriKind.Absolute);
+                var baseUri = DependencyManager.GetService<OpenRasta.Hosting.IApplicationBaseUriProvider>().GetBaseUri(Request);
 
                 var appBaseUri = new Uri(baseUri, new Uri(NativeContext.Request.ApplicationPath, UriKind.Relative));
                 return appBaseUri;
