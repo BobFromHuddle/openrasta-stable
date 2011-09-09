@@ -22,6 +22,7 @@ using OpenRasta.Configuration.MetaModel.Handlers;
 using OpenRasta.DI;
 using OpenRasta.Diagnostics;
 using OpenRasta.Handlers;
+using OpenRasta.Hosting;
 using OpenRasta.OperationModel;
 using OpenRasta.OperationModel.CodecSelectors;
 using OpenRasta.OperationModel.Filters;
@@ -60,6 +61,7 @@ namespace OpenRasta.Configuration
             SetTypeSystem<ReflectionBasedTypeSystem>();
             SetMetaModelRepository<MetaModelRepository>();
             SetUriResolver<TemplatedUriResolver>();
+            SetBaseUriProvider<ApplicationBaseUriProvider>();
             SetCodecRepository<CodecRepository>();
             SetHandlerRepository<HandlerRepository>();
             SetPipeline<PipelineRunner>();
@@ -82,6 +84,11 @@ namespace OpenRasta.Configuration
             AddOperationCodecResolvers();
             AddLogSources();
             AddSurrogateBuilders();
+        }
+
+        void SetBaseUriProvider<T>()
+        {
+            BaseUriProviderType = typeof(T);
         }
 
         public void AddSurrogateBuilders()
@@ -121,6 +128,7 @@ namespace OpenRasta.Configuration
         protected IList<Type> TraceSourceListenerTypes { get; private set; }
         protected Type TypeSystemType { get; set; }
         protected Type UriResolverType { get; set; }
+        protected Type BaseUriProviderType { get; set; }
 
         public void AddCodec<T>() where T : ICodec
         {
@@ -285,6 +293,7 @@ namespace OpenRasta.Configuration
             resolver.AddDependency(typeof(IOperationInterceptorProvider), OperationInterceptorProviderType, DependencyLifetime.Transient);
             resolver.AddDependency(typeof(IPathManager), PathManagerType, DependencyLifetime.Singleton);
             resolver.AddDependency(typeof(ISurrogateProvider), typeof(SurrogateBuilderProvider), DependencyLifetime.Singleton);
+            resolver.AddDependency(typeof(IApplicationBaseUriProvider), BaseUriProviderType, DependencyLifetime.Singleton);
         }
 
         [Conditional("DEBUG")]
